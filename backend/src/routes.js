@@ -6,6 +6,7 @@ import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
 import RecipientController from './app/controllers/RecipientController';
+import DeliverymanController from './app/controllers/DeliverymanController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -28,6 +29,14 @@ routes.delete('/recipients/:id', RecipientController.delete);
 
 // File Route
 routes.post('/files', upload.single('file'), FileController.store);
+routes.put('/files/:id', upload.single('file'), FileController.update);
+routes.delete('/files/:id', upload.single('file'), FileController.delete);
+
+// Deliverymans Routes
+routes.post('/deliverymans', DeliverymanController.store);
+routes.get('/deliverymans', DeliverymanController.index);
+routes.put('/deliverymans/:id', DeliverymanController.update);
+routes.delete('/deliverymans/:id', DeliverymanController.delete);
 
 // Middleware Route
 routes.use(authMiddleware);

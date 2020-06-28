@@ -78,12 +78,18 @@ class RecipientController {
     const schema = Yup.object().shape({ id: Yup.number().required() });
 
     const { id } = req.params;
-    const recipient = await Recipient.findByPk(id);
 
     if (!(await schema.isValid(req.params))) {
       return res.status(400).json({
-        error: `Dados inválidos: Destinatário
-         não foi cadastrado ou seus dados já foram excluídos.`,
+        error: 'A validação falhou.',
+      });
+    }
+
+    const recipient = await Recipient.findByPk(id);
+
+    if (!recipient) {
+      return res.status(400).json({
+        error: 'Destinatário não existe ou não foi cadastrado.',
       });
     }
 
