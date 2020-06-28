@@ -56,8 +56,13 @@ class UserController {
     }
 
     const { email, oldPassword } = req.body;
+
     // Procura o cadastro pela primaryKey da id do usuário
-    const user = await User.findByPk(req.userId);
+    const user = await User.findByPk(req.params.id);
+
+    if (!user) {
+      return res.status(400).json({ error: 'Usuário não cadastrado' });
+    }
 
     // Valida o email informado com o email já cadastrado
 
@@ -91,6 +96,29 @@ class UserController {
       name,
       email,
     });
+  }
+
+  async delete(req, res) {
+    const schema = Yup.object().shape({ id: Yup.number().required() });
+
+    const { id } = req.params;
+    const user = await User.findByPk(id);
+
+    if (!(await schema.isValid(req.params))) {
+      return res.status(400).json({
+        error: 'A validação falhou.',
+      });
+    }
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ error: 'Usuário não cadastrado ou já foi removido' });
+    }
+
+    await user.destroy(id);
+
+    return res.json({ msg: 'Usuário deletado.' });
   }
 }
 

@@ -5,7 +5,7 @@ import authConfig from '../../config/auth';
 
 class SessionController {
   async store(req, res) {
-    const schema = Yup.object.shape({
+    const schema = Yup.object().shape({
       email: Yup.string()
         .email()
         .required(),
@@ -15,9 +15,7 @@ class SessionController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res
-        .status(400)
-        .json({ error: 'Dados inseridos estão incorretos.' });
+      return res.status(400).json({ error: 'A validação falhou' });
     }
 
     const { email, password } = req.body;
