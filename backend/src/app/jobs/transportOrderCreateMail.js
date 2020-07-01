@@ -2,24 +2,32 @@ import Mail from '../../lib/Mail';
 
 class TransportOrderCreateMail {
   get key() {
-    return 'docTransportOrderCreateMail';
+    return 'transportOrderCreateMail';
   }
 
   async handle({ data }) {
-    const { deliverymanExist, recipientExist, deliveryOrder } = data;
+    const {
+      deliverymanSearchId,
+      recipientSearchId,
+      deliveryOrder,
+      product,
+    } = data;
 
     await Mail.sendMail({
-      to: `${deliverymanExist.name}<${deliverymanExist.email}>`,
+      to: `${deliverymanSearchId.name} <${deliverymanSearchId.email}>`,
       subject: 'Detalhes da nova entrega',
       template: 'transportOrderCreateMail',
       context: {
-        deliveryman: deliverymanExist.name,
-        product: deliveryOrder.product,
-        recipient: recipientExist.name,
-        street: recipientExist.street,
-        number: recipientExist.number,
-        city: recipientExist.city,
-        state: recipientExist.state,
+        id: deliveryOrder.id,
+        deliveryman: deliverymanSearchId.name,
+        product,
+        recipient: recipientSearchId.name,
+        street: recipientSearchId.street,
+        number: recipientSearchId.number,
+        complement_address: recipientSearchId.complement_address,
+        city: recipientSearchId.city,
+        state: recipientSearchId.state,
+        zip_code: recipientSearchId.zip_code,
       },
     });
   }

@@ -3,7 +3,9 @@ import DeliveryOrder from '../models/DeliveryOrder';
 import Recipient from '../models/Recipient';
 import File from '../models/File';
 import Deliveryman from '../models/Deliveryman';
-import Que from '../../lib/Queue';
+import Queue from '../../lib/Queue';
+import TransportOrderCreateMail from '../jobs/transportOrderCreateMail';
+import TransportOrderUpdateMail from '../jobs/transportOrderUpdateMail';
 
 class DeliveryOrderController {
   async store(req, res) {
@@ -19,17 +21,18 @@ class DeliveryOrderController {
 
     const { deliveryman_id, recipient_id, product } = req.body;
 
-    const recipient = await Recipient.findByPk(recipient_id);
-    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
+    const recipientSearchId = await Recipient.findByPk(recipient_id);
 
-    if (!recipient) {
+    const deliverymanSearchId = await Deliveryman.findByPk(deliveryman_id);
+
+    if (!recipientSearchId) {
       return res.status(400).json({
         error:
           'Não existe cadastrado para o destinátario(a) ou entregador(a) informado(a).',
       });
     }
 
-    if (!deliveryman) {
+    if (!deliverymanSearchId) {
       return res.status(400).json({
         error:
           'Não existe cadastrado para o destinátario(a) ou entregador(a) informado(a).',
@@ -39,6 +42,13 @@ class DeliveryOrderController {
       deliveryman_id,
       recipient_id,
       product,
+    });
+
+    await Queue.add(TransportOrderCreateMail.key, {
+      deliveryOrder,
+      recipientSearchId,
+      deliverymanSearchId,
+      product: req.body.product,
     });
 
     return res.json(deliveryOrder);
@@ -96,7 +106,7 @@ class DeliveryOrderController {
 
     const { id } = req.params;
     const deliveryOrder = await DeliveryOrder.findByPk(id);
-    const { deliveryman_id, recipient_id } = req.body;
+    const { deliveryman_id, recipient_id, product } = req.body;
 
     const recipient = await Recipient.findByPk(recipient_id);
     const deliveryman = await Deliveryman.findByPk(deliveryman_id);
@@ -120,13 +130,25 @@ class DeliveryOrderController {
           'Não existe cadastrado para o destinátario(a) ou entregador(a) informado(a).',
       });
     }
-    await deliveryOrder.update(req.body);
+    await deliveryOrder.update({
+      deliveryman_id,
+      recipient_id,
+      product,
+    });
+
+    await Queue.add(TransportOrderUpdateMail.key, {
+      deliveryOrder,
+      recipient,
+      deliveryman,
+      product: req.body.product,
+    });
 
     return res.json(deliveryOrder);
   }
 
   async delete(req, res) {
     const schema = Yup.object().shape({ id: Yup.number().required() });
+
     const { id } = req.params;
 
     if (!(await schema.isValid(req.params))) {
@@ -142,6 +164,7 @@ class DeliveryOrderController {
       });
     }
     await deliveryOrder.destroy(id);
+
     return res.json({ msg: 'Ordem de entrega excluída com sucesso.' });
   }
 }
