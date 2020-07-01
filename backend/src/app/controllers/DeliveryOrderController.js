@@ -6,6 +6,7 @@ import Deliveryman from '../models/Deliveryman';
 import Queue from '../../lib/Queue';
 import TransportOrderCreateMail from '../jobs/transportOrderCreateMail';
 import TransportOrderUpdateMail from '../jobs/transportOrderUpdateMail';
+import TransportOrderDeleteMail from '../jobs/transportOrderDeleteMail';
 
 class DeliveryOrderController {
   async store(req, res) {
@@ -155,7 +156,30 @@ class DeliveryOrderController {
       return res.status().json({ error: 'A validação falhou.' });
     }
 
-    const deliveryOrder = await DeliveryOrder.findByPk(id);
+    const deliveryOrder = await DeliveryOrder.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['id', 'name', 'email'],
+        },
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'id',
+            'name',
+            'street',
+            'number',
+            'complement_address',
+            'state',
+            'city',
+            'zip_code',
+          ],
+        },
+      ],
+    });
 
     if (!deliveryOrder) {
       return res.status(400).json({
@@ -164,9 +188,15 @@ class DeliveryOrderController {
       });
     }
 
+    await Queue.add(TransportOrderDeleteMail.key, {
+      deliveryOrder,
+    });
+
     await deliveryOrder.destroy(id);
 
-    return res.json({ msg: 'Ordem de entrega excluída com sucesso.' });
+    return res.json({
+      msg: 'Ordem de entrega excluída com sucesso.',
+    });
   }
 }
 
