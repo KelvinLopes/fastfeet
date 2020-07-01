@@ -163,6 +163,7 @@ class DeliveryOrderController {
           'Essa ordem de entrega não existe ou já foi deletada do sistema.',
       });
     }
+
     await deliveryOrder.destroy(id);
 
     return res.json({ msg: 'Ordem de entrega excluída com sucesso.' });

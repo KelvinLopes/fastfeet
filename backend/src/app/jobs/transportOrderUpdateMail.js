@@ -11,7 +11,7 @@ class TransportOrderUpdateMail {
     await Mail.sendMail({
       to: `${deliveryman} <${deliveryman.email}>`,
       subject: `Detalhes da atualização da entrega ${deliveryOrder.id}`,
-      template: 'transportOrderUpdate',
+      template: 'transportOrderUpdateMail',
       context: {
         id: deliveryOrder.id,
         deliveryman: deliveryman.name,

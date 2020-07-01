@@ -8,6 +8,7 @@ import FileController from './app/controllers/FileController';
 import RecipientController from './app/controllers/RecipientController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliveryOderController from './app/controllers/DeliveryOrderController';
+import ListDeliveryOrdersToDelivemanController from './app/controllers/ListDeliveryOrdersToDelivemanController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -45,6 +46,12 @@ routes.post('/deliveryorders', DeliveryOderController.store);
 routes.get('/deliveryorders', DeliveryOderController.index);
 routes.put('/deliveryorders/:id', DeliveryOderController.update);
 routes.delete('/deliveryorders/:id', DeliveryOderController.delete);
+
+// Deliveryman Routes List yours deliveries
+routes.get(
+  '/deliverieslist/:id',
+  ListDeliveryOrdersToDelivemanController.index
+);
 
 // Middleware Route
 routes.use(authMiddleware);
