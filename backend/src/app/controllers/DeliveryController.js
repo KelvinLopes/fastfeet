@@ -36,7 +36,7 @@ class DeliveryController {
     if (
       !isWithinInterval(startDate, {
         start: setHours(currentDate, 8),
-        end: setHours(currentDate, 18),
+        end: setHours(currentDate, 23),
       })
     ) {
       return res.status(400).json({
@@ -45,10 +45,23 @@ class DeliveryController {
       });
     }
 
+    const checkDeliveryOrderStart = await DeliveryOrder.findOne({
+      attributes: ['start_date'],
+      where: {
+        id: deliveryOrder_id,
+        start_date: { [Op.ne]: null },
+      },
+    });
+
+    if (checkDeliveryOrderStart) {
+      return res.status(400).json({
+        error: 'Essa ordem de entrega já foi inicializada.',
+      });
+    }
+
     if (!deliveryOrder) {
       return res.status(400).json({
-        error:
-          'Ordem de entrega não foi encontrada ou não existe. Verifique se já foi inicializada.',
+        error: 'Ordem de entrega não existe.',
       });
     }
 
@@ -95,7 +108,6 @@ class DeliveryController {
       where: {
         id: deliveryOrder_id,
         start_date: { [Op.ne]: null },
-        // end_date: { [Op.ne]: null },
         end_date: null,
         canceled_at: null,
       },
@@ -108,23 +120,41 @@ class DeliveryController {
       ],
     });
 
+    const checkDeliveryOrderEnd = await DeliveryOrder.findOne({
+      attributes: ['end_date'],
+      where: {
+        id: deliveryOrder_id,
+        end_date: { [Op.ne]: null },
+      },
+    });
+
+    if (checkDeliveryOrderEnd && !signature) {
+      return res.status(400).json({
+        error: 'Assinatura informada não existe.',
+      });
+    }
+
+    if (checkDeliveryOrderEnd) {
+      return res.status(400).json({
+        error: 'Essa ordem de entrega já foi finalizada.',
+      });
+    }
+
     if (!deliveryOrder && !signature) {
       return res.status(400).json({
-        error: `Ordem de entrega e assinatura não foram encontradas
-        verifique se já foi finalizada e se o arquivo da assinatura existe.`,
+        error: 'Ordem de entrega e assinatura informada não existem.',
       });
     }
 
     if (!signature) {
       return res.status(400).json({
-        error: 'Assinatura não foi encontrada.',
+        error: 'Assinatura informada não existe.',
       });
     }
 
     if (!deliveryOrder) {
       return res.status(400).json({
-        error:
-          'Ordem de entrega não foi encontrada, verifique se já foi finalizada.',
+        error: 'Ordem de entrega informada não existe.',
       });
     }
 
@@ -134,7 +164,7 @@ class DeliveryController {
     });
 
     return res.json({
-      msg: `Ordem de entrega finalizada com sucesso! ${signature_id}`,
+      msg: 'Ordem de entrega finalizada com sucesso!',
     });
   }
 }

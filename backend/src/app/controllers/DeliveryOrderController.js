@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import DeliveryOrder from '../models/DeliveryOrder';
 import Recipient from '../models/Recipient';
 import File from '../models/File';
@@ -180,6 +181,21 @@ class DeliveryOrderController {
         },
       ],
     });
+
+    const checkDeliveryOrder = await DeliveryOrder.findOne({
+      attributes: ['end_date'],
+      where: {
+        id: req.params.id,
+        end_date: { [Op.ne]: null },
+      },
+    });
+
+    if (checkDeliveryOrder) {
+      return res.status(400).json({
+        error:
+          'Essa ordem de entrega já foi concluida e não pode ser mais excluída do sistema.',
+      });
+    }
 
     if (!deliveryOrder) {
       return res.status(400).json({
