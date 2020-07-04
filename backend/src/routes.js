@@ -50,6 +50,7 @@ routes.delete('/deliveryorders/:id', DeliveryOderController.delete);
 
 // Delivery Routes
 routes.post('/delivery', DeliveryController.store);
+routes.put('/finalize_delivery', DeliveryController.update);
 // Deliveryman Routes List yours deliveries
 routes.get(
   '/deliverieslist/:id',

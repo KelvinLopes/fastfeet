@@ -30,7 +30,7 @@ module.exports = {
       signature_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'deliverymans',
+          model: 'files',
           key: 'id',
         },
         onUpdate: 'CASCADE',
