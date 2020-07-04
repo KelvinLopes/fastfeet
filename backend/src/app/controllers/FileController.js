@@ -67,12 +67,12 @@ class FileController {
 
     if (!file) {
       return res.status(400).json({
-        error: 'Essa assinatura não foi enviada ou foi já deletada.',
+        error: 'Essa assinatura não foi enviada ou já foi deletada.',
       });
     }
 
     await file.destroy(id);
-    return res.json({ msg: 'A assinatura foi removida.' });
+    return res.json({ msg: 'A assinatura foi removida com sucesso.' });
   }
 }
 
