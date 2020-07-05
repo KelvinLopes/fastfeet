@@ -35,7 +35,7 @@ class DeliveryController {
 
     if (
       !isWithinInterval(startDate, {
-        start: setHours(currentDate, 8),
+        start: setHours(currentDate, 1),
         end: setHours(currentDate, 23),
       })
     ) {

@@ -9,6 +9,8 @@ import RecipientController from './app/controllers/RecipientController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliveryOderController from './app/controllers/DeliveryOrderController';
 import DeliveryController from './app/controllers/DeliveryController';
+import DeliveryProblemsController from './app/controllers/DeliveryProblemController';
+import DeliveryProblemsEditController from './app/controllers/DeliveryProblemEditController';
 import ListDeliveryOrdersToDelivemanController from './app/controllers/ListDeliveryOrdersToDelivemanController';
 
 import authMiddleware from './app/middlewares/auth';
@@ -51,10 +53,22 @@ routes.delete('/deliveryorders/:id', DeliveryOderController.delete);
 // Delivery Routes
 routes.post('/delivery', DeliveryController.store);
 routes.put('/finalize_delivery', DeliveryController.update);
+
 // Deliveryman Routes List yours deliveries
 routes.get(
   '/deliverieslist/:id',
   ListDeliveryOrdersToDelivemanController.index
+);
+
+// Delivery Problems Routes
+routes.post('/delivery_problem', DeliveryProblemsController.store);
+routes.get('/delivery_problem', DeliveryProblemsController.index);
+routes.put('/edit_delivery_problem/:id', DeliveryProblemsController.update);
+
+// Delivery Edit Problems Route
+routes.put(
+  '/edit_description_delivery_problem',
+  DeliveryProblemsEditController.update
 );
 
 // Middleware Route
