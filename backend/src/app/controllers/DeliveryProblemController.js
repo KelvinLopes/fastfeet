@@ -3,6 +3,9 @@ import { Op } from 'sequelize';
 import DeliveryProblem from '../models/DeliveryProblem';
 import DeliveryOrder from '../models/DeliveryOrder';
 import Deliveryman from '../models/Deliveryman';
+import Recipient from '../models/Recipient';
+import Queue from '../../lib/Queue';
+import TransportOrderCancelMail from '../jobs/transportOrderCancelMail';
 
 class DeliveryProblemController {
   async store(req, res) {
@@ -232,9 +235,49 @@ class DeliveryProblemController {
       return res.status(400).json({ error: 'Dados informados inválidos.' });
     }
 
+    const toEmail = await DeliveryProblem.findOne({
+      where: { delivery_id: id },
+      order: [['id', 'asc']],
+      attributes: ['id', 'description'],
+      description: { [Op.ne]: null },
+      include: [
+        {
+          model: DeliveryOrder,
+          as: 'delivery_order',
+          attributes: ['id', 'product', 'canceled_at'],
+          where: {
+            canceled_at: null,
+          },
+          include: [
+            {
+              model: Deliveryman,
+              as: 'deliveryman',
+              attributes: ['name', 'email'],
+            },
+            {
+              model: Recipient,
+              as: 'recipient',
+              attributes: [
+                'id',
+                'name',
+                'street',
+                'number',
+                'complement_address',
+                'state',
+                'city',
+                'zip_code',
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
     await deliveryProblem.update({
       canceled_at: new Date(),
     });
+
+    await Queue.add(TransportOrderCancelMail.key, { toEmail });
 
     return res.json(deliveryProblem);
   }

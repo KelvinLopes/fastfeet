@@ -40,8 +40,8 @@ class FileController {
 
     if (!file) {
       return res.status(400).json({
-        error: `Essa assinatura não foi enviada ou foi deletada do sistema.
-         Faça um novo envio da assinatura.`,
+        error: `Esse arquivo não foi enviado ou foi deletado do sistema.
+         Faça um novo envio do arquivo.`,
       });
     }
 
@@ -51,7 +51,7 @@ class FileController {
       name,
       path,
     });
-    return res.json({ msg: 'A assinatura foi atualizada com sucesso.' });
+    return res.json({ msg: 'Arquivo foi atualizado com sucesso.' });
   }
 
   // Delete File
@@ -67,12 +67,12 @@ class FileController {
 
     if (!file) {
       return res.status(400).json({
-        error: 'Essa assinatura não foi enviada ou já foi deletada.',
+        error: 'Esse arquivo não foi enviado ou já foi deletado.',
       });
     }
 
     await file.destroy(id);
-    return res.json({ msg: 'A assinatura foi removida com sucesso.' });
+    return res.json({ msg: 'O arquivo foi removido com sucesso.' });
   }
 }
 

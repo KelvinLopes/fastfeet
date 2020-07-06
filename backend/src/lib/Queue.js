@@ -2,6 +2,7 @@ import Bee from 'bee-queue';
 import transportOrderCreateMail from '../app/jobs/transportOrderCreateMail';
 import transportOrderCancelMail from '../app/jobs/transportOrderCancelMail';
 import transportOrderUpdateMail from '../app/jobs/transportOrderUpdateMail';
+import transportOrderEndedMail from '../app/jobs/transportOrderEndedMail';
 import transportOrderDeleteMail from '../app/jobs/transportOrderDeleteMail';
 import redisConfig from '../config/redis';
 
@@ -9,6 +10,7 @@ const jobs = [
   transportOrderCreateMail,
   transportOrderCancelMail,
   transportOrderUpdateMail,
+  transportOrderEndedMail,
   transportOrderDeleteMail,
 ];
 

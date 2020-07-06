@@ -3,6 +3,10 @@ import { startOfDay, setHours, isWithinInterval } from 'date-fns';
 import { Op } from 'sequelize';
 import DeliveryOrder from '../models/DeliveryOrder';
 import Signature from '../models/File';
+import Deliveryman from '../models/Deliveryman';
+import Recipient from '../models/Recipient';
+import Queue from '../../lib/Queue';
+import TransportOrderEndedMail from '../jobs/transportOrderEndedMail';
 
 class DeliveryController {
   async store(req, res) {
@@ -79,7 +83,7 @@ class DeliveryController {
      *Mudar de 50 para 5, que é o pedido real
      */
 
-    if (deliveryOrdesDeliveryman.length >= 50) {
+    if (deliveryOrdesDeliveryman.length >= 150) {
       return res.json({
         msg: 'Parabéns você cumpriu as 5 entregas de hoje. Volte amanhã!',
       });
@@ -162,6 +166,35 @@ class DeliveryController {
       end_date: new Date(),
       signature_id,
     });
+
+    const toEmail = await DeliveryOrder.findOne({
+      where: { id: deliveryOrder_id },
+      order: [['id', 'asc']],
+      attributes: ['id', 'product'],
+      include: [
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['name', 'email'],
+        },
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'id',
+            'name',
+            'street',
+            'number',
+            'complement_address',
+            'state',
+            'city',
+            'zip_code',
+          ],
+        },
+      ],
+    });
+
+    await Queue.add(TransportOrderEndedMail.key, { toEmail });
 
     return res.json({
       msg: 'Ordem de entrega finalizada com sucesso!',
