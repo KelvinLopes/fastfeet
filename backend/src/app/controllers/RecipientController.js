@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import Recipient from '../models/Recipient';
 
 class RecipientController {
@@ -42,6 +43,43 @@ class RecipientController {
     });
 
     return res.json(recipientCreatedList);
+  }
+
+  async show(req, res) {
+    const schema = Yup.object().shape({
+      recipeintName: Yup.string(),
+    });
+
+    if (!(await schema.isValid(req.query))) {
+      return res.status(400).json({
+        error: 'A validação falhou.',
+      });
+    }
+
+    const { page = 1 } = req.query;
+
+    const { recipeintName } = req.query;
+
+    const recipientSearch = await Recipient.findAll({
+      where: {
+        name: { [Op.iLike]: recipeintName ? `${recipeintName}` : `%%` },
+      },
+      order: [['id', 'asc']],
+      attributes: [
+        'id',
+        'name',
+        'street',
+        'number',
+        'complement_address',
+        'state',
+        'city',
+        'zip_code',
+      ],
+      limit: 10,
+      offset: (page - 1) * 10,
+    });
+
+    return res.json(recipientSearch);
   }
 
   async update(req, res) {

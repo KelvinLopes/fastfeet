@@ -95,6 +95,34 @@ class DeliveryOrderController {
     return res.json(DeliveryOrderList);
   }
 
+  async show(req, res) {
+    const schema = Yup.object().shape({
+      product: Yup.string(),
+    });
+
+    if (!(await schema.isValid(req.query))) {
+      return res.status(400).json({
+        error: 'A validação falhou.',
+      });
+    }
+
+    const { page = 1 } = req.query;
+
+    const { productName } = req.query;
+
+    const productSearch = await DeliveryOrder.findAll({
+      where: {
+        product: { [Op.iLike]: productName ? `${productName}` : `%%` },
+      },
+      order: [['id', 'asc']],
+      attributes: ['id', 'product'],
+      limit: 10,
+      offset: (page - 1) * 10,
+    });
+
+    return res.json(productSearch);
+  }
+
   async update(req, res) {
     const schema = Yup.object().shape({
       deliveryman_id: Yup.number().required(),

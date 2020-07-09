@@ -29,6 +29,7 @@ routes.post('/session', SessionController.store);
 // Recipients Routes
 routes.post('/recipients', RecipientController.store);
 routes.get('/recipients', RecipientController.index);
+routes.get('/recipients/recipient', RecipientController.show);
 routes.put('/recipients/:id', RecipientController.update);
 routes.delete('/recipients/:id', RecipientController.delete);
 
@@ -41,12 +42,14 @@ routes.delete('/files/:id', FileController.delete);
 // Deliverymans Routes
 routes.post('/deliverymans', DeliverymanController.store);
 routes.get('/deliverymans', DeliverymanController.index);
+routes.get('/deliverymans/deliveryman', DeliverymanController.show);
 routes.put('/deliverymans/:id', DeliverymanController.update);
 routes.delete('/deliverymans/:id', DeliverymanController.delete);
 
 // DeliveryOrders Routes
 routes.post('/deliveryorders', DeliveryOderController.store);
 routes.get('/deliveryorders', DeliveryOderController.index);
+routes.get('/products/product', DeliveryOderController.show);
 routes.put('/deliveryorders/:id', DeliveryOderController.update);
 routes.delete('/deliveryorders/:id', DeliveryOderController.delete);
 

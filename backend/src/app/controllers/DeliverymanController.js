@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 
+import { Op } from 'sequelize';
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 
@@ -55,6 +56,41 @@ class DeliverymanController {
     });
 
     return res.json(deliverymanList);
+  }
+
+  async show(req, res) {
+    const schema = Yup.object().shape({
+      deliverymanName: Yup.string(),
+    });
+
+    if (!(await schema.isValid(req.query))) {
+      return res.status(400).json({
+        error: 'A validação falhou.',
+      });
+    }
+
+    const { page = 1 } = req.query;
+
+    const { deliverymanName } = req.query;
+
+    const deliverymanSearch = await Deliveryman.findAll({
+      where: {
+        name: { [Op.iLike]: deliverymanName ? `${deliverymanName}` : `%%` },
+      },
+      order: [['id', 'asc']],
+      attributes: ['id', 'name'],
+      limit: 10,
+      offset: (page - 1) * 10,
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['name', 'path', 'url'],
+        },
+      ],
+    });
+
+    return res.json(deliverymanSearch);
   }
 
   async update(req, res) {
