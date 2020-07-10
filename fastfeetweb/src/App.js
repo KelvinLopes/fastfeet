@@ -1,16 +1,27 @@
 import React from 'react';
-import './App.css';
+import { ToastContainer } from 'react-toastify';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import './config/ReactotronConfig';
+import GlobalStyle from './styles/global';
+
+import Routes from './routes';
+import history from './services/history';
+
+import { store, persistor } from './store';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src="https://raw.githubusercontent.com/Rocketseat/bootcamp-gostack-desafio-03/master/.github/logo.png"  className="App-logo" alt="logo" />
-        <p>
-         FastFeet em construção aqui.
-        </p>
-      </header>
-    </div>
+    <Provider store={store}>
+    <PersistGate persistor={persistor}>
+      <Router history={history}>
+        <Routes />
+        <GlobalStyle />
+        <ToastContainer autoClose={3000} />
+      </Router>
+      </PersistGate>
+    </Provider>
   );
 }
 
