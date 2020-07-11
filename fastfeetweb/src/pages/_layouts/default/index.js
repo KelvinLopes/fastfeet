@@ -13,6 +13,6 @@ export default function DefaultLayout({ children }) {
   );
 }
 
-DefaultLayout.prototype = {
+DefaultLayout.protoTypes = {
   children: PropTypes.element.isRequired,
 };

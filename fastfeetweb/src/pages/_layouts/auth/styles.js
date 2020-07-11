@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { darken } from 'polished';
 
 export const Wrapper = styled.div`
-  height: 100%;
-  background: transparent;
+  min-height: 100vh;
+  background: rgba(125,64, 231, 1);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,7 +16,7 @@ export const Content = styled.div`
   padding: 60px 20px;
   border-radius: 4px;
   background: #ffff;
-  margin: 120px auto;
+  margin: 70px auto;
 
 
   img {
@@ -83,7 +83,7 @@ export const Content = styled.div`
       outline: none;
 
       &:hover {
-        background: ${darken(0.03, '#3b9eff')};
+        background: ${darken(0.03, '#c69fe2')};
       }
     }
   }
