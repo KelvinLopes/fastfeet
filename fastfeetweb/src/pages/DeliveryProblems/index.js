@@ -3,13 +3,12 @@ import api from '../../services/api';
 import { Container } from './styles';
 
 
-export default function dashboard() {
-  api.get('deliveryorders');
+export default function deliveryProblems() {
+  api.get('/delivery_problem');
   return(
     <Container>
-      <h1>Orders</h1>
+      <h1>Problems</h1>
     </Container>
   );
 
 }
-

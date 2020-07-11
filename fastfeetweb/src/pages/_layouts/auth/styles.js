@@ -15,7 +15,7 @@ export const Content = styled.div`
   text-align: center;
   padding: 60px 20px;
   border-radius: 4px;
-  background: #ffff;
+  background: rgba(245, 245, 245, 1);
   margin: 70px auto;
 
 
