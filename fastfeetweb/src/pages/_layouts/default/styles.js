@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  height: 100%;
-  background: rgba(245, 245, 245, 1);
+  min-height: 100vh;
+  background: #f5f5f5;
   opacity: 1;
 `;
