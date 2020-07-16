@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { darken } from 'polished';
 
 export const Wrapper = styled.div`
+
   min-height: 100vh;
   background: rgba(125,64, 231, 1);
   display: flex;
@@ -10,6 +11,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Content = styled.div`
+
   width: 100%;
   max-width: 360px;
   text-align: center;
@@ -43,6 +45,7 @@ export const Content = styled.div`
     height: auto;
 
     input {
+
       background: rgba(255, 255, 255, 1);
       border: 1px solid rgba(221, 221, 211, 1);
       opacity: 1;
@@ -63,6 +66,7 @@ export const Content = styled.div`
     }
   }
     span {
+
       color: #f64c75;
       aling-self: flex-start;
       margin: 0 0 10px;
@@ -83,18 +87,21 @@ export const Content = styled.div`
       outline: none;
 
       &:hover {
+
         background: ${darken(0.03, '#c69fe2')};
       }
     }
   }
 
   a {
+
     color: #fff;
     margin-top: 15px;
     font-size: 16px;
     opacity: 0.8;
 
     &:hover {
+
       opacity: 1;
     }
   }

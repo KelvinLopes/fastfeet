@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-import { Container } from './styles';
+import { Container, BodyList} from './styles';
 import { FaPlus, FaSearch } from 'react-icons/fa';
 
+export default function Dashboard() {
 
-export default function dashboard() {
-  api.get('deliveryorders');
+ const [deliveries, setDeliveries] = useState([]);
+
+
+useEffect(() =>  {
+
+  async function renderDeliveries() {
+
+    const res = await api.get('deliveryorders');
+
+    const data = res.data.map(delivery => ({
+      ...delivery,
+    }));
+  setDeliveries(data);
+}
+  renderDeliveries()
+
+}, []);
+
   return(
     <Container>
       <header className="title-manager"><h1>Gerenciando encomendas</h1></header>
@@ -31,38 +48,22 @@ export default function dashboard() {
           <h1>Ações</h1>
         </header>
 
-          <section className="body-list">
-            <span><h1>#01</h1></span>
-            <span><h1>Ludwing Van Bethoven</h1></span>
-            <span><h1>Jonh Doe</h1></span>
-            <span><h1>Rio do Sul</h1></span>
-            <span><h1>Santa Carina</h1></span>
-            <span><h1>Entregue</h1></span>
-            <span><h1>...</h1></span>
+          <section>
+           { deliveries.map(delivery => (
+              <BodyList key={delivery.id}>
+                <span><h1>#{delivery.id}</h1></span>
+                <span><h1>{delivery.recipient.name}</h1></span>
+                <span><h1>{delivery.deliveryman.name}</h1></span>
+                <span><h1>{delivery.recipient.city}</h1></span>
+                <span><h1>{delivery.recipient.state}</h1></span>
+                <span><h1>Entregue</h1></span>
+                <span><h1>...</h1></span>
+              </BodyList>
+           ))}
+
           </section>
 
-          <section className="body-list">
-            <span><h1>#02</h1></span>
-            <span><h1>Ludwing Van Bethoven</h1></span>
-            <span><h1>Jonh Doe</h1></span>
-            <span><h1>Rio do Sul</h1></span>
-            <span><h1>Santa Carina</h1></span>
-            <span><h1>Entregue</h1></span>
-            <span><h1>...</h1></span>
-          </section>
-
-          <section className="body-list">
-            <span><h1>#03</h1></span>
-            <span><h1>Ludwing Van Bethoven</h1></span>
-            <span><h1>Jonh Doe</h1></span>
-            <span><h1>Rio do Sul</h1></span>
-            <span><h1>Santa Carina</h1></span>
-            <span><h1>Entregue</h1></span>
-            <span><h1>...</h1></span>
-          </section>
       </main>
     </Container>
   );
-
-}
-
+ }

@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+
   width: 100vw;
   display: flex;
   flex-direction: column;
   align-content: center;
   justify-content: center;
+  margin: 0 auto;
 
   h1 {
     color: #000;
@@ -48,6 +50,10 @@ export const Container = styled.div`
     border-radius: 4px;
     width: 16vw;
     height: 36px;
+
+    &::placeholder {
+      text-align: center;
+    }
   }
 
 .icon-search {
@@ -70,6 +76,7 @@ export const Container = styled.div`
   }
 
   button h3 {
+
     color: #fff;
     opcaity: 1;
     font-size: 14px;
@@ -78,10 +85,12 @@ export const Container = styled.div`
   }
 
   button:hover {
+
     background: rgba(198, 159, 226, 1);
   }
 
   button:active {
+
     background: rgba(198, 159, 226, 0.5);
   }
 
@@ -94,7 +103,6 @@ export const Container = styled.div`
     margin: 30px auto;
 }
 
-
 main .header-list-orders h1 {
 
   font-family: Roboto-Bold;
@@ -103,18 +111,6 @@ main .header-list-orders h1 {
   opacity: 1;
 }
 
-main .body-list h1 {
-
-  font-family: Roboto-Regular;
-  font-size: 16px;
-  text-align: center;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  color: #666666;
-  opacity: 1;
-}
-
-
 main .header-list-orders {
 
   display: grid;
@@ -122,16 +118,31 @@ main .header-list-orders {
   text-align: center;
 }
 
-main .body-list {
+`;
+
+export const BodyList = styled.section`
 
   display: grid;
   grid-template-columns: repeat( auto-fit, minmax(25px, 1fr) );
+  grid-column-gap: auto;
   background: #fff;
   width: 90vw;
   height: auto;
   border: #eee 1px;
   box-shadow: 0.8px 0.8px 0.8px 0.8px rgba(0,0,0,0.4);
   margin-bottom: 15px;
+  grid-flex: 1;
+
+
+h1 {
+    font-family: Roboto-Regular;
+    font-size: 16px;
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    color: #666666;
+    opacity: 1;
 }
+
 
 `;
